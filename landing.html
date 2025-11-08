@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerability Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        .btn-custom {
+            background-color: #00bfa6;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-custom:hover {
+            background-color: #02d6b7;
+            transform: scale(1.05);
+        }
+        h1 {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Welcome to the Vulnerability Detection Dashboard</h1>
+        <p>This system helps identify, track, and manage vulnerabilities detected across your applications using simulated scans and integrated tools like OWASP ZAP and Nmap.</p>
+        <a href="{{ url_for('index') }}" class="btn-custom">Enter Dashboard</a>
+    </div>
+</body>
+</html>

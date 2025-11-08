@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scan Result</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #121212;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .container {
+            background: #1e1e2f;
+            padding: 30px;
+            border-radius: 15px;
+            width: 70%;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+        a {
+            color: #0ef;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scan Result for {{ target }}</h1>
+        <p>{{ result }}</p>
+        <a href="/scan">🔁 Run Another Scan</a>
+    </div>
+</body>
+</html>

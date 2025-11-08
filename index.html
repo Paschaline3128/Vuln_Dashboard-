@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🛡️ Vulnerability Detection Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #0a0f1a;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+    }
+    .card {
+      background: #141a29;
+      border: 1px solid #222b40;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .card-header {
+      background: linear-gradient(90deg, #007bff, #00c6ff);
+      border-radius: 15px 15px 0 0;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #007bff, #00c6ff);
+      border: none;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #0056b3, #00aaff);
+    }
+    .btn-success {
+      background: linear-gradient(90deg, #28a745, #00ff99);
+      border: none;
+    }
+    .table {
+      color: #fff;
+      background-color: #141a29;
+    }
+    .table thead {
+      background-color: #1c2537;
+      color: #00d4ff;
+    }
+    .badge {
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="card shadow-lg">
+      <div class="card-header text-center text-white">
+        <h3>🛡️ Vulnerability Detection Dashboard</h3>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-4">
+          <form action="/scan" method="post">
+            <button class="btn btn-primary px-4 py-2">Run Vulnerability Scan</button>
+          </form>
+          <a href="/download_report" class="btn btn-success px-4 py-2">Download Report (PDF)</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <canvas id="severityChart" height="120"></canvas>
+
+        <table class="table table-hover table-striped mt-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Vulnerability</th>
+              <th>Severity</th>
+              <th>Description</th>
+              <th>Date Detected</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vuln in vulnerabilities %}
+              <tr>
+                <td>{{ vuln.id }}</td>
+                <td>{{ vuln.name }}</td>
+                <td>
+                  <span class="badge 
+                    {% if vuln.severity == 'High' %}bg-danger
+                    {% elif vuln.severity == 'Medium' %}bg-warning
+                    {% else %}bg-secondary{% endif %}">
+                    {{ vuln.severity }}
+                  </span>
+                </td>
+                <td>{{ vuln.description }}</td>
+                <td>{{ vuln.date_detected.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>
+                  <a href="/delete/{{ vuln.id }}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const severityCounts = {{ severity_counts | tojson | safe }};
+    const ctx = document.getElementById('severityChart');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['High', 'Medium', 'Low'],
+        datasets: [{
+          label: 'Severity Distribution',
+          data: [severityCounts.High, severityCounts.Medium, severityCounts.Low],
+          backgroundColor: ['#ff3860', '#ffb347', '#6c757d']
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#fff' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
